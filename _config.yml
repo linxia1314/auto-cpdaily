@@ -1,0 +1,5 @@
+theme: jekyll-theme-slate
+show_downloads: True
+github:
+  Code_url: https://github.com/carltonhere/auto-cpdaily/archive/refs/heads/main.zip
+  Dependency_url: https://github.com/carltonhere/auto-cpdaily/releases/download/Initial/Dependency.zip
