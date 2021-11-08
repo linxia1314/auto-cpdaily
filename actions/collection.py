@@ -13,6 +13,7 @@ class Collection:
         self.collectWid = None
         self.formWid = None
         self.schoolTaskWid = None
+        self.instanceWid = None
 
     # 查询表单
     def queryForm(self):
@@ -30,6 +31,7 @@ class Collection:
             if item['isHandled'] == 0:
                 self.collectWid = item['wid']
                 self.formWid = item['formWid']
+                self.instanceWid = item['instanceWid']
         if (self.formWid == None):
             raise Exception('当前暂时没有未完成的信息收集哦！')
         detailUrl = f'{self.host}wec-counselor-collector-apps/stu/collector/detailCollector'
@@ -44,7 +46,8 @@ class Collection:
             "pageSize": 100,
             "pageNumber": 1,
             "formWid": self.formWid,
-            "collectorWid": self.collectWid
+            "collectorWid": self.collectWid,
+            "instanceWid": self.instanceWid
         }
         res = self.session.post(getFormUrl,
                                 headers=headers,
@@ -119,7 +122,7 @@ class Collection:
 
     # 提交表单
     def submitForm(self):
-        params = {
+        self.submitData = {
             "formWid": self.formWid,
             "address": self.userInfo['address'],
             "collectWid": self.collectWid,
@@ -129,10 +132,6 @@ class Collection:
             "latitude": self.userInfo['lat'],
             'longitude': self.userInfo['lon']
         }
-        submitUrl = f'{self.host}wec-counselor-collector-apps/stu/collector/submitForm'
-        data = self.session.post(submitUrl,
-                                 headers=Utils.createHeaders(
-                                     self.host, self.userInfo),
-                                 data=json.dumps(params),
-                                 verify=False).json()
-        return data['message']
+        self.submitApi = 'wec-counselor-collector-apps/stu/collector/submitForm'
+        res = Utils.submitFormData(self).json()
+        return res['message']
